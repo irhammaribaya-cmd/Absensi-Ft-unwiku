@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Absensi Teknik UNWIKU (Premium UI)</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* ===================================== */
+        /* CSS UNTUK TAMPILAN PREMIUM & MODERN   */
+        /* ===================================== */
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap');
+
+        :root {
+            --bg-start: #161c3a; /* Biru Gelap Baru */
+            --bg-end: #2d163a;   /* Ungu Gelap Baru */
+            --card-color: #272c47; 
+            --text-color: #e0e0e0; /* Teks lebih terang */
+            --primary-color: #84aaff; /* Biru Neon Lebih Cerah */
+            --secondary-color: #ff6b6b; /* Merah untuk logout */
+            --success-color: #4CAF50;
+            --shadow-color: rgba(0, 0, 0, 0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            
+            /* Latar Belakang Gradien Animasi */
+            background: linear-gradient(-45deg, var(--bg-start), var(--bg-end), #3a162d, #161c3a);
+            background-size: 400% 400%;
+            animation: gradient-animation 18s ease infinite; /* Animasi lebih lambat */
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background-color: var(--card-color);
+            padding: 35px;
+            border-radius: 25px; /* Sudut lebih lembut */
+            width: 100%;
+            max-width: 500px; /* Sedikit lebih lebar */
+            box-shadow: 0 15px 40px var(--shadow-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Tampilan Khusus Dashboard */
+        #adminDashboardPage {
+            max-width: 1100px;
+            padding: 40px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            font-weight: 800; /* Lebih tebal */
+            text-shadow: 0 0 10px rgba(132, 170, 255, 0.7);
+        }
+
+        header p {
+            font-size: 1rem;
+            color: #b0b0b0;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-color);
+            text-transform: uppercase;
+        }
+        
+        .form-group label i {
+            margin-right: 10px;
+            color: var(--primary-color);
+            min-width: 20px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background-color: #3b3f5e;
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s;
+            /* Efek Neumorphism Ringan */
+            box-shadow: inset 5px 5px 10px rgba(0, 0, 0, 0.4), inset -5px -5px 10px rgba(255, 255, 255, 0.1);
+            appearance: none; 
+        }
+
+        input:focus,
+        select:focus {
+            background-color: #4a4f70;
+            box-shadow: 0 0 0 4px var(--primary-color), 0 0 20px rgba(132, 170, 255, 0.9);
+            outline: none;
+        }
+        
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--success-color);
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5), -5px -5px 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .submit-button:hover {
+            background-color: #43A047;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.8);
+        }
+
+        /* Navigasi & Halaman */
+        .admin-link a {
+            color: var(--primary-color);
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        .page { display: none; }
+        .page.active { display: block; }
+        .login-container { max-width: 380px; }
+
+        /* Gaya Tabel Rekap */
+        .rekap-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(255, 255, 255, 0.15);
+        }
+        .rekap-section h2 {
+            color: #ffd966; /* Kuning emas */
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-left: 5px solid #ffd966;
+            padding-left: 15px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .data-table th {
+            background-color: var(--primary-color);
+            color: #1a1a2e;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .data-table tbody tr {
+            background-color: #313651;
+            transition: background-color 0.2s;
+        }
+        .data-table tbody tr:hover {
+            background-color: #3b4260;
+        }
+        .logout-button {
+            background-color: var(--secondary-color) !important;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.6) !important;
+            margin-bottom: 10px;
+        }
+        .logout-button:hover {
+            background-color: #e55c5c !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container page active" id="absensiPage">
+        <header>
+            <h1><i class="fas fa-graduation-cap"></i> ABSENSI TEKNIK UNWIKU</h1>
+            <p>Formulir Kehadiran Mahasiswa</p>
+        </header>
+
+        <form action="#" onsubmit="saveAbsenceData(event); return false;">
+            <div class="form-group">
+                <label for="nim"><i class="fas fa-id-card"></i> ID NIM:</label>
+                <input type="text" id="nim" name="nim" placeholder="Masukkan NIM Anda" required>
+            </div>
+
+            <div class="form-group">
+                <label for="nama"><i class="fas fa-user"></i> Nama Lengkap:</label>
+                <input type="text" id="nama" name="nama" placeholder="Masukkan Nama Lengkap" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prodi"><i class="fas fa-code-branch"></i> Program Studi:</label>
+                <select id="prodi" name="prodi" required>
+                    <option value="Teknik Sipil">Teknik Sipil</option>
+                    <option value="Teknik Elektro">Teknik Elektro</option>
+                    <option value="Teknik Mesin">Teknik Mesin</option>
+                    <option value="Teknik Informatika">Teknik Informatika</option>
+                    <option value="Arsitektur">Arsitektur</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="semester"><i class="fas fa-book-open"></i> Semester:</label>
+                <select id="semester" name="semester" required>
+                    <option value="" disabled selected>Pilih Semester</option>
+                    <option value="1">1 (Satu)</option>
+                    <option value="2">2 (Dua)</option>
+                    <option value="3">3 (Tiga)</option>
+                    <option value="4">4 (Empat)</option>
+                    <option value="5">5 (Lima)</option>
+                    <option value="6">6 (Enam)</option>
+                    <option value="7">7 (Tujuh)</option>
+                    <option value="8">8 (Delapan)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="tahun_masuk"><i class="fas fa-calendar-alt"></i> Tahun Masuk:</label>
+                <select id="tahun_masuk" name="tahun_masuk" required></select>
+            </div>
+
+            <div class="form-group">
+                <label for="matkul"><i class="fas fa-chalkboard-teacher"></i> Mata Kuliah:</label>
+                <input type="text" id="matkul" name="matkul" placeholder="Tuliskan Nama Mata Kuliah" required>
+            </div>
+
+            <div class="form-group">
+                <label for="waktu_kuliah"><i class="fas fa-clock"></i> Waktu Mata Kuliah:</label>
+                <input type="time" id="waktu_kuliah" name="waktu_kuliah" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="tanggal_absensi"><i class="fas fa-calendar-check"></i> Tanggal Absensi:</label>
+                <input type="date" id="tanggal_absensi" name="tanggal_absensi" required>
+            </div>
+
+            <button type="submit" class="submit-button"><i class="fas fa-paper-plane"></i> SUBMIT KEHADIRAN</button>
+            <div id="submitMessage" style="text-align: center; margin-top: 10px; font-weight: 600;"></div>
+        </form>
+    
+        <div class="admin-link">
+            <a href="#" onclick="showPage('adminLoginPage'); return false;"><i class="fas fa-user-shield"></i> Login Admin</a>
+        </div>
+    </div>
+
+
+    <div class="container login-container page" id="adminLoginPage">
+        <header>
+            <h1><i class="fas fa-lock"></i> LOGIN ADMIN</h1>
+            <p>Akses Data Absensi</p>
+        </header>
+
+        <form action="#" id="adminLoginForm" onsubmit="handleLogin(event); return false;">
+            <div class="form-group">
+                <label for="admin_password"><i class="fas fa-key"></i> Password Admin:</label>
+                <input type="password" id="admin_password" name="password" placeholder="Masukkan Password" required>
+            </div>
+            
+            <div id="loginMessage" style="color: red; text-align: center; margin-bottom: 15px; font-weight: 600;"></div>
+
+            <button type="submit" class="submit-button" style="background-color: var(--primary-color);"><i class="fas fa-sign-in-alt"></i> LOGIN</button>
+        </form>
+        
+        <div class="admin-link" style="margin-top: 30px;">
+            <a href="#" onclick="showPage('absensiPage'); return false;"><i class="fas fa-arrow-left"></i> Kembali ke Absensi Mahasiswa</a>
+        </div>
+    </div>
+
+
+    <div class="container page" id="adminDashboardPage">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> REKAP DATA ABSENSI</h1>
+            <p>Data Mahasiswa Teknik UNWIKU</p>
+        </header>
+        
+        <button class="submit-button logout-button" onclick="showPage('absensiPage');"><i class="fas fa-sign-out-alt"></i> LOGOUT</button>
+
+        <div id="rekapContainer">
+            </div>
+        
+        <div class="admin-link">
+            <a href="#" onclick="showPage('absensiPage'); return false;"><i class="fas fa-arrow-left"></i> Ke Halaman Absensi</a>
+        </div>
+    </div>
+
+
+    <script>
+        // Data Konfigurasi
+        const CORRECT_PASSWORD = 'Teknikunwiku'; 
+        const ABSENCE_KEY = 'unwiku_absensi_data';
+        
+        // DAFTAR PROGRAM STUDI UNTUK REKAP
+        const PRODI_LIST = [
+            'Teknik Sipil', 
+            'Teknik Elektro', 
+            'Teknik Mesin', 
+            'Teknik Informatika',
+            'Arsitektur' 
+        ];
+        
+        // Mengisi opsi Tahun Masuk (2019-2050)
+        function populateYears() {
+            const select = document.getElementById('tahun_masuk');
+            select.innerHTML = '';
+            const startYear = 2019;
+            const endYear = 2050; 
+            const defaultYear = new Date().getFullYear();
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('tanggal_absensi').value = today;
+
+            for (let year = startYear; year <= endYear; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                if (year === defaultYear) {
+                    option.selected = true; 
+                }
+                select.appendChild(option);
+            }
+        }
+
+        // Fungsi navigasi antar halaman
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+                window.scrollTo(0, 0); 
+            }
+            
+            if (pageId === 'adminLoginPage') {
+                document.getElementById('loginMessage').textContent = '';
+                document.getElementById('adminLoginForm').reset();
+            } else if (pageId === 'adminDashboardPage') {
+                displayAbsenceRekap(); 
+            }
+        }
+        
+        // Fungsi menyimpan data ke Local Storage
+        function saveAbsenceData(event) {
+            event.preventDefault();
+            const form = event.target;
+            const data = Object.fromEntries(new FormData(form).entries());
+            const messageDiv = document.getElementById('submitMessage');
+
+            try {
+                let absensiData = JSON.parse(localStorage.getItem(ABSENCE_KEY)) || [];
+                
+                // Tambahkan waktu submit untuk tracking
+                data.waktu_submit = new Date().toLocaleString('id-ID', {
+                    day: '2-digit', 
+                    month: 'short', 
+                    year: 'numeric',
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+
+                absensiData.push(data);
+                
+                localStorage.setItem(ABSENCE_KEY, JSON.stringify(absensiData));
+                
+                messageDiv.style.color = 'var(--success-color)';
+                messageDiv.textContent = '✅ Kehadiran berhasil dicatat! Terima kasih.';
+                
+                form.reset();
+                populateYears(); 
+                
+            } catch (error) {
+                messageDiv.style.color = 'red';
+                messageDiv.textContent = '❌ Gagal menyimpan data. Coba lagi.';
+                console.error("Error saving data:", error);
+            }
+        }
+        
+        // Logika Login Admin
+        function handleLogin(event) {
+            event.preventDefault(); 
+            
+            const passwordInput = document.getElementById('admin_password').value;
+            const messageDiv = document.getElementById('loginMessage');
+
+            if (passwordInput === CORRECT_PASSWORD) {
+                messageDiv.style.color = 'var(--success-color)';
+                messageDiv.textContent = '✅ Login Berhasil!';
+                
+                setTimeout(() => {
+                    showPage('adminDashboardPage');
+                }, 500);
+
+            } else {
+                messageDiv.style.color = 'red';
+                messageDiv.textContent = '❌ Gagal Login. Password salah.';
+            }
+        }
+        
+        // Logika Rekap Data Admin
+        function displayAbsenceRekap() {
+            const rekapContainer = document.getElementById('rekapContainer');
+            rekapContainer.innerHTML = ''; 
+            
+            let allData = JSON.parse(localStorage.getItem(ABSENCE_KEY)) || [];
+
+            if (allData.length === 0) {
+                rekapContainer.innerHTML = '<div class="empty-message">Belum ada data absensi yang tercatat.</div>';
+                return;
+            }
+            
+            const dataByProdi = allData.reduce((acc, data) => {
+                const prodi = data.prodi || 'Tidak Diketahui';
+                if (!acc[prodi]) {
+                    acc[prodi] = [];
+                }
+                acc[prodi].push(data);
+                return acc;
+            }, {});
+
+            PRODI_LIST.forEach(prodi => {
+                const dataProdi = dataByProdi[prodi] || [];
+                
+                let html = `
+                    <div class="rekap-section">
+                        <h2><i class="fas fa-chart-area"></i> ${prodi} (${dataProdi.length} Absensi)</h2>
+                `;
+                
+                if (dataProdi.length > 0) {
+                    html += `
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>NIM</th>
+                                    <th>Nama</th>
+                                    <th>Sem.</th>
+                                    <th>Matkul</th>
+                                    <th>Waktu</th>
+                                    <th>Tgl Absensi</th>
+                                    <th>Waktu Submit</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    
+                    dataProdi.forEach(data => {
+                        html += `
+                            <tr>
+                                <td>${data.nim}</td>
+                                <td>${data.nama}</td>
+                                <td>${data.semester}</td>
+                                <td>${data.matkul}</td>
+                                <td>${data.waktu_kuliah}</td>
+                                <td>${data.tanggal_absensi}</td>
+                                <td>${data.waktu_submit}</td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    html += `<div class="empty-message">Tidak ada data absensi untuk prodi ${prodi}.</div>`;
+                }
+
+                html += `</div>`;
+                rekapContainer.innerHTML += html;
+            });
+            
+            if (dataByProdi['Tidak Diketahui'] && dataByProdi['Tidak Diketahui'].length > 0) {
+                 rekapContainer.innerHTML += `
+                    <div class="rekap-section">
+                        <h2><i class="fas fa-exclamation-triangle"></i> Data Prodi Tidak Teridentifikasi (${dataByProdi['Tidak Diketahui'].length} Absensi)</h2>
+                        <div class="empty-message">Beberapa data tidak memiliki Program Studi yang valid.</div>
+                    </div>
+                `;
+            }
+        }
+
+
+        // Jalankan fungsi inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', populateYears);
+    </script>
+</body>
+</html>
